@@ -1,0 +1,19 @@
+{
+  "name": "projetexamen",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serveur": "nodemon ./serveur.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "mysql2": "^3.17.5",
+    "nodemon": "^3.1.14"
+  }
+}

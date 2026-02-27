@@ -1,0 +1,118 @@
+<%- include('partials/header') %>
+
+<div class="container mt-4">
+
+  <%# ── Vérification : si la tâche est terminée on bloque ── %>
+  <% if (tache.statut === 'termine') { %>
+
+    <div class="alert alert-danger">
+      <h5>🚫 Modification impossible</h5>
+      <p class="mb-0">Cette tâche est terminée, elle ne peut plus être modifiée.</p>
+    </div>
+    <a href="/" class="btn btn-dark">← Retour</a>
+
+  <% } else { %>
+
+    <div class="card">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">✏️ Modifier la tâche</h5>
+      </div>
+      <div class="card-body">
+
+        <form method="POST" action="/taches/<%= tache.id %>/modifier">
+
+          <%# ── Titre ── %>
+          <div class="mb-3">
+            <label class="form-label">Titre *</label>
+            <input
+              type="text"
+              name="titre"
+              class="form-control"
+              value="<%= tache.titre %>"
+              required
+            />
+          </div>
+
+          <%# ── Description ── %>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea
+              name="description"
+              class="form-control"
+              rows="2"
+            ><%= tache.description || '' %></textarea>
+          </div>
+
+          <%# ── Responsable ── %>
+          <div class="mb-3">
+            <label class="form-label">Responsable *</label>
+            <input
+              type="text"
+              name="responsable"
+              class="form-control"
+              value="<%= tache.responsable %>"
+              required
+            />
+          </div>
+
+          <%# ── Date limite + Priorité ── %>
+          <div class="row">
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Date limite</label>
+              <input
+                type="date"
+                name="date_limite"
+                class="form-control"
+                value="<%= tache.date_limite ? new Date(tache.date_limite).toISOString().split('T')[0] : '' %>"
+              />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Priorité</label>
+              <select name="priorite" class="form-select">
+                <option value="basse"   <%= tache.priorite === 'basse'   ? 'selected' : '' %>>🟢 Basse</option>
+                <option value="moyenne" <%= tache.priorite === 'moyenne' ? 'selected' : '' %>>🟡 Moyenne</option>
+                <option value="haute"   <%= tache.priorite === 'haute'   ? 'selected' : '' %>>🔴 Haute</option>
+              </select>
+            </div>
+
+          </div>
+
+          <%# ── Info date création non modifiable ── %>
+          <div class="alert alert-secondary">
+            <small>
+              🕐 Créée le :
+              <strong>
+                <%= new Date(tache.date_creation).toLocaleDateString('fr-FR') %>
+              </strong>
+              &nbsp;|&nbsp;
+              Statut actuel :
+              <% if (tache.statut === 'a faire') { %>
+                <span class="badge bg-secondary">📝 À faire</span>
+              <% } else { %>
+                <span class="badge bg-primary">🔄 En cours</span>
+              <% } %>
+            </small>
+          </div>
+
+          <%# ── Boutons ── %>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-dark">
+              💾 Sauvegarder
+            </button>
+            <a href="/" class="btn btn-outline-secondary">
+              Annuler
+            </a>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+  <% } %>
+
+</div>
+
+<%- include('partials/footer') %>

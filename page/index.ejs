@@ -1,0 +1,275 @@
+<%- include('partials/header') %>
+
+<div class="container mt-4">
+
+  <%# ════════════════════════════════ %>
+  <%# SECTION 1 : Formulaire d'ajout  %>
+  <%# ════════════════════════════════ %>
+
+  <div class="card mb-4">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0">➕ Ajouter une tâche</h5>
+    </div>
+    <div class="card-body">
+
+      <form method="POST" action="/taches/ajouter">
+
+        <%# ── Titre ── %>
+        <div class="mb-3">
+          <label class="form-label">Titre *</label>
+          <input
+            type="text"
+            name="titre"
+            class="form-control"
+            placeholder="Ex: Faire les courses"
+            required
+          />
+        </div>
+
+        <%# ── Description ── %>
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea
+            name="description"
+            class="form-control"
+            rows="2"
+            placeholder="Détails de la tâche..."
+          ></textarea>
+        </div>
+
+        <%# ── Responsable ── %>
+        <div class="mb-3">
+          <label class="form-label">Responsable *</label>
+          <input
+            type="text"
+            name="responsable"
+            class="form-control"
+            placeholder="Ex: Jean Dupont"
+            required
+          />
+        </div>
+
+        <%# ── Date limite + Priorité ── %>
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Date limite</label>
+            <input
+              type="date"
+              name="date_limite"
+              class="form-control"
+            />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Priorité</label>
+            <select name="priorite" class="form-select">
+              <option value="basse">🟢 Basse</option>
+              <option value="moyenne">🟡 Moyenne</option>
+              <option value="haute">🔴 Haute</option>
+            </select>
+          </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-dark w-100">
+          Ajouter la tâche
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+  <%# ════════════════════════════════════ %>
+  <%# SECTION 2 : Recherche + Filtrage    %>
+  <%# ════════════════════════════════════ %>
+
+  <div class="card mb-4">
+    <div class="card-body">
+
+      <form method="GET" action="/">
+        <div class="row g-2">
+
+          <%# ── Recherche ── %>
+          <div class="col-md-6">
+            <input
+              type="text"
+              name="recherche"
+              class="form-control"
+              placeholder="🔍 Rechercher par titre ou description..."
+              value="<%= recherche || '' %>"
+            />
+          </div>
+
+          <%# ── Filtre statut ── %>
+          <div class="col-md-3">
+            <select name="statut" class="form-select">
+              <option value="">Tous les statuts</option>
+              <option value="a faire"  <%= statut === 'a faire'  ? 'selected' : '' %>>📝 À faire</option>
+              <option value="en cours" <%= statut === 'en cours' ? 'selected' : '' %>>🔄 En cours</option>
+              <option value="termine"  <%= statut === 'termine'  ? 'selected' : '' %>>✅ Terminé</option>
+            </select>
+          </div>
+
+          <%# ── Filtre priorité ── %>
+          <div class="col-md-3">
+            <select name="priorite" class="form-select">
+              <option value="">Toutes les priorités</option>
+              <option value="basse"   <%= priorite === 'basse'   ? 'selected' : '' %>>🟢 Basse</option>
+              <option value="moyenne" <%= priorite === 'moyenne' ? 'selected' : '' %>>🟡 Moyenne</option>
+              <option value="haute"   <%= priorite === 'haute'   ? 'selected' : '' %>>🔴 Haute</option>
+            </select>
+          </div>
+
+          <%# ── Boutons ── %>
+          <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-dark">Filtrer</button>
+            <a href="/" class="btn btn-outline-secondary">Réinitialiser</a>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <%# ════════════════════════════════════ %>
+  <%# SECTION 3 : Liste des tâches        %>
+  <%# ════════════════════════════════════ %>
+
+  <div class="card">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">📋 Liste des tâches</h5>
+      <span class="badge bg-secondary">
+        <%= taches.length %> tâche(s)
+      </span>
+    </div>
+    <div class="card-body p-0">
+
+      <% if (taches.length === 0) { %>
+
+        <div class="text-center text-muted py-5">
+          <p class="mb-0">Aucune tâche trouvée.</p>
+        </div>
+
+      <% } else { %>
+
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+
+            <thead class="table-dark">
+              <tr>
+                <th>Titre</th>
+                <th>Responsable</th>
+                <th>Priorité</th>
+                <th>Date limite</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% taches.forEach(tache => { %>
+
+                <%# ── Calcul retard ── %>
+                <%
+                  const aujourdhui = new Date();
+                  const dateLimit  = tache.date_limite ? new Date(tache.date_limite) : null;
+                  const enRetard   = dateLimit && tache.statut !== 'termine' && dateLimit < aujourdhui;
+                %>
+
+                <tr class="<%= enRetard ? 'table-danger' : '' %>">
+
+                  <%# ── Titre ── %>
+                  <td>
+                    <strong><%= tache.titre %></strong>
+                    <% if (tache.description) { %>
+                      <br><small class="text-muted"><%= tache.description %></small>
+                    <% } %>
+                    <% if (enRetard) { %>
+                      <br><span class="badge bg-danger">⚠️ En retard</span>
+                    <% } %>
+                  </td>
+
+                  <%# ── Responsable ── %>
+                  <td><%= tache.responsable %></td>
+
+                  <%# ── Priorité ── %>
+                  <td>
+                    <% if (tache.priorite === 'haute') { %>
+                      <span class="badge bg-danger">🔴 Haute</span>
+                    <% } else if (tache.priorite === 'moyenne') { %>
+                      <span class="badge bg-warning text-dark">🟡 Moyenne</span>
+                    <% } else { %>
+                      <span class="badge bg-success">🟢 Basse</span>
+                    <% } %>
+                  </td>
+
+                  <%# ── Date limite ── %>
+                  <td>
+                    <% if (tache.date_limite) { %>
+                      <span class="<%= enRetard ? 'text-danger fw-bold' : '' %>">
+                        <%= new Date(tache.date_limite).toLocaleDateString('fr-FR') %>
+                      </span>
+                    <% } else { %>
+                      <span class="text-muted">—</span>
+                    <% } %>
+                  </td>
+
+                  <%# ── Statut cliquable ── %>
+                  <td>
+                    <% if (tache.statut === 'a faire') { %>
+                      <a href="/taches/<%= tache.id %>/statut" class="badge bg-secondary text-decoration-none">
+                        📝 À faire →
+                      </a>
+                    <% } else if (tache.statut === 'en cours') { %>
+                      <a href="/taches/<%= tache.id %>/statut" class="badge bg-primary text-decoration-none">
+                        🔄 En cours →
+                      </a>
+                    <% } else { %>
+                      <span class="badge bg-success">✅ Terminée</span>
+                    <% } %>
+                  </td>
+
+                  <%# ── Actions ── %>
+                  <td>
+                    <div class="d-flex gap-1">
+
+                      <%# Modifier seulement si pas terminée %>
+                      <% if (tache.statut !== 'termine') { %>
+                        <a href="/taches/<%= tache.id %>/modifier" class="btn btn-sm btn-outline-dark">
+                          ✏️
+                        </a>
+                      <% } %>
+
+                      <%# Supprimer toujours disponible %>
+                      <form method="POST" action="/taches/<%= tache.id %>/supprimer">
+                        <button
+                          type="submit"
+                          class="btn btn-sm btn-outline-danger"
+                          onclick="return confirm('Supprimer cette tâche ?')"
+                        >
+                          🗑️
+                        </button>
+                      </form>
+
+                    </div>
+                  </td>
+
+                </tr>
+
+              <% }) %>
+            </tbody>
+
+          </table>
+        </div>
+
+      <% } %>
+
+    </div>
+  </div>
+
+</div>
+
+<%- include('partials/footer') %>

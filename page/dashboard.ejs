@@ -1,0 +1,148 @@
+<%- include('partials/header') %>
+
+<div class="container mt-4">
+
+  <h4 class="mb-4">📊 Tableau de bord</h4>
+
+  <%# ════════════════════════════════════ %>
+  <%# SECTION 1 : Cartes statistiques     %>
+  <%# ════════════════════════════════════ %>
+
+  <div class="row g-3 mb-4">
+
+    <%# ── Total des tâches ── %>
+    <div class="col-md-3">
+      <div class="card text-center border-dark">
+        <div class="card-body">
+          <h2 class="fw-bold"><%= stats.total %></h2>
+          <p class="text-muted mb-0">Total des tâches</p>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Tâches à faire ── %>
+    <div class="col-md-3">
+      <div class="card text-center border-secondary">
+        <div class="card-body">
+          <h2 class="fw-bold text-secondary"><%= stats.aFaire %></h2>
+          <p class="text-muted mb-0">📝 À faire</p>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Tâches en cours ── %>
+    <div class="col-md-3">
+      <div class="card text-center border-primary">
+        <div class="card-body">
+          <h2 class="fw-bold text-primary"><%= stats.enCours %></h2>
+          <p class="text-muted mb-0">🔄 En cours</p>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Tâches terminées ── %>
+    <div class="col-md-3">
+      <div class="card text-center border-success">
+        <div class="card-body">
+          <h2 class="fw-bold text-success"><%= stats.terminees %></h2>
+          <p class="text-muted mb-0">✅ Terminées</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <%# ════════════════════════════════════ %>
+  <%# SECTION 2 : Pourcentage + Retards   %>
+  <%# ════════════════════════════════════ %>
+
+  <div class="row g-3 mb-4">
+
+    <%# ── Pourcentage terminées ── %>
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-header bg-dark text-white">
+          <h6 class="mb-0">🎯 Progression</h6>
+        </div>
+        <div class="card-body">
+
+          <div class="d-flex justify-content-between mb-1">
+            <span>Tâches terminées</span>
+            <strong><%= stats.pourcentage %>%</strong>
+          </div>
+
+          <%# ── Barre de progression ── %>
+          <div class="progress" style="height: 25px;">
+            <div
+              class="progress-bar bg-success"
+              style="width: <%= stats.pourcentage %>%"
+            >
+              <%= stats.pourcentage %>%
+            </div>
+          </div>
+
+          <%# ── Message selon progression ── %>
+          <div class="mt-3">
+            <% if (stats.pourcentage === 100) { %>
+              <span class="badge bg-success">🎉 Toutes les tâches sont terminées !</span>
+            <% } else if (stats.pourcentage >= 50) { %>
+              <span class="badge bg-primary">💪 Plus de la moitié accomplie !</span>
+            <% } else { %>
+              <span class="badge bg-secondary">🚀 Continuez comme ça !</span>
+            <% } %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <%# ── Tâches en retard ── %>
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-header bg-danger text-white">
+          <h6 class="mb-0">⚠️ Tâches en retard</h6>
+        </div>
+        <div class="card-body">
+
+          <% if (stats.enRetard === 0) { %>
+            <p class="text-success mb-0">✅ Aucune tâche en retard !</p>
+
+          <% } else { %>
+            <h2 class="fw-bold text-danger"><%= stats.enRetard %></h2>
+            <p class="text-muted">tâche(s) dont la date limite est dépassée</p>
+
+            <%# ── Liste des tâches en retard ── %>
+            <ul class="list-group list-group-flush">
+              <% tachesEnRetard.forEach(tache => { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span>
+                    <%= tache.titre %>
+                    <br>
+                    <small class="text-muted"><%= tache.responsable %></small>
+                  </span>
+                  <span class="badge bg-danger">
+                    <%= new Date(tache.date_limite).toLocaleDateString('fr-FR') %>
+                  </span>
+                </li>
+              <% }) %>
+            </ul>
+
+          <% } %>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <%# ════════════════════════════════════ %>
+  <%# SECTION 3 : Lien retour             %>
+  <%# ════════════════════════════════════ %>
+
+  <a href="/" class="btn btn-dark">
+    ← Retour aux tâches
+  </a>
+
+</div>
+
+<%- include('partials/footer') %>
