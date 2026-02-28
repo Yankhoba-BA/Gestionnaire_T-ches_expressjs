@@ -2,9 +2,9 @@
 
 <div class="container mt-4">
 
-  <%# ════════════════════════════════ %>
-  <%# SECTION 1 : Formulaire d'ajout  %>
-  <%# ════════════════════════════════ %>
+
+  <%#Formulaire d'ajout  %>
+
 
   <div class="card mb-4">
     <div class="card-header bg-dark text-white">
@@ -14,7 +14,7 @@
 
       <form method="POST" action="/taches/ajouter">
 
-        <%# ── Titre ── %>
+        <%#Titre%>
         <div class="mb-3">
           <label class="form-label">Titre *</label>
           <input
@@ -26,7 +26,7 @@
           />
         </div>
 
-        <%# ── Description ── %>
+        <%#Description%>
         <div class="mb-3">
           <label class="form-label">Description</label>
           <textarea
@@ -37,19 +37,19 @@
           ></textarea>
         </div>
 
-        <%# ── Responsable ── %>
+        <%#Responsable%>
         <div class="mb-3">
           <label class="form-label">Responsable *</label>
           <input
             type="text"
             name="responsable"
             class="form-control"
-            placeholder="Ex: Jean Dupont"
+            placeholder="Ex:Yankhoba BA"
             required
           />
         </div>
 
-        <%# ── Date limite + Priorité ── %>
+        <%#Date limite ET Priorité%>
         <div class="row">
 
           <div class="col-md-6 mb-3">
@@ -81,9 +81,9 @@
     </div>
   </div>
 
-  <%# ════════════════════════════════════ %>
-  <%# SECTION 2 : Recherche + Filtrage    %>
-  <%# ════════════════════════════════════ %>
+
+  <%#Recherche + Filtrage    %>
+ 
 
   <div class="card mb-4">
     <div class="card-body">
@@ -91,7 +91,7 @@
       <form method="GET" action="/">
         <div class="row g-2">
 
-          <%# ── Recherche ── %>
+          <%#Recherche%>
           <div class="col-md-6">
             <input
               type="text"
@@ -102,7 +102,7 @@
             />
           </div>
 
-          <%# ── Filtre statut ── %>
+          <%#Filtre statut%>
           <div class="col-md-3">
             <select name="statut" class="form-select">
               <option value="">Tous les statuts</option>
@@ -112,7 +112,7 @@
             </select>
           </div>
 
-          <%# ── Filtre priorité ── %>
+          <%#Filtre priorité%>
           <div class="col-md-3">
             <select name="priorite" class="form-select">
               <option value="">Toutes les priorités</option>
@@ -122,7 +122,7 @@
             </select>
           </div>
 
-          <%# ── Boutons ── %>
+          <%#Boutons%>
           <div class="col-12 d-flex gap-2">
             <button type="submit" class="btn btn-dark">Filtrer</button>
             <a href="/" class="btn btn-outline-secondary">Réinitialiser</a>
@@ -134,9 +134,8 @@
     </div>
   </div>
 
-  <%# ════════════════════════════════════ %>
   <%# SECTION 3 : Liste des tâches        %>
-  <%# ════════════════════════════════════ %>
+
 
   <div class="card">
     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
@@ -181,7 +180,7 @@
 
                 <tr class="<%= enRetard ? 'table-danger' : '' %>">
 
-                  <%# ── Titre ── %>
+                  <%#Titre%>
                   <td>
                     <strong><%= tache.titre %></strong>
                     <% if (tache.description) { %>
@@ -192,10 +191,10 @@
                     <% } %>
                   </td>
 
-                  <%# ── Responsable ── %>
+                  <%#Responsable%>
                   <td><%= tache.responsable %></td>
 
-                  <%# ── Priorité ── %>
+                  <%#Priorité%>
                   <td>
                     <% if (tache.priorite === 'haute') { %>
                       <span class="badge bg-danger">🔴 Haute</span>
@@ -206,7 +205,7 @@
                     <% } %>
                   </td>
 
-                  <%# ── Date limite ── %>
+                  <%#Date limite%>
                   <td>
                     <% if (tache.date_limite) { %>
                       <span class="<%= enRetard ? 'text-danger fw-bold' : '' %>">

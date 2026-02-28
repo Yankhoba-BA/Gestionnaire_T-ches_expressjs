@@ -2,10 +2,10 @@ const express = require('express');
 const router  = express.Router();
 const db      = require('../config/db');
 
-// ════════════════════════════════════════
+
 // GET / — Afficher toutes les tâches
 // + recherche et filtrage
-// ════════════════════════════════════════
+
 router.get('/', (req, res) => {
 
   // Récupérer les filtres depuis l'URL
@@ -52,9 +52,8 @@ router.get('/', (req, res) => {
   });
 });
 
-// ════════════════════════════════════════
 // POST /taches/ajouter — Ajouter une tâche
-// ════════════════════════════════════════
+
 router.post('/taches/ajouter', (req, res) => {
 
   const { titre, description, responsable, date_limite, priorite } = req.body;
@@ -70,8 +69,6 @@ router.post('/taches/ajouter', (req, res) => {
     responsable,
     date_limite || null,
     priorite
-    // statut → 'a faire' par défaut (défini dans MySQL)
-    // date_creation → générée automatiquement par MySQL
   ];
 
   db.query(sql, params, (err) => {
@@ -83,10 +80,9 @@ router.post('/taches/ajouter', (req, res) => {
   });
 });
 
-// ════════════════════════════════════════
 // GET /taches/:id/statut — Changer statut
 // à faire → en cours → terminée
-// ════════════════════════════════════════
+
 router.get('/taches/:id/statut', (req, res) => {
 
   const id = req.params.id;
@@ -125,9 +121,9 @@ router.get('/taches/:id/statut', (req, res) => {
   });
 });
 
-// ════════════════════════════════════════
+
 // GET /taches/:id/modifier — Afficher formulaire
-// ════════════════════════════════════════
+
 router.get('/taches/:id/modifier', (req, res) => {
 
   const id = req.params.id;
@@ -148,9 +144,9 @@ router.get('/taches/:id/modifier', (req, res) => {
   });
 });
 
-// ════════════════════════════════════════
+
 // POST /taches/:id/modifier — Sauvegarder
-// ════════════════════════════════════════
+
 router.post('/taches/:id/modifier', (req, res) => {
 
   const id = req.params.id;
@@ -180,9 +176,9 @@ router.post('/taches/:id/modifier', (req, res) => {
   });
 });
 
-// ════════════════════════════════════════
+
 // POST /taches/:id/supprimer — Supprimer
-// ════════════════════════════════════════
+
 router.post('/taches/:id/supprimer', (req, res) => {
 
   const id = req.params.id;
@@ -196,9 +192,9 @@ router.post('/taches/:id/supprimer', (req, res) => {
   });
 });
 
-// ════════════════════════════════════════
+
 // GET /dashboard — Statistiques
-// ════════════════════════════════════════
+
 router.get('/dashboard', (req, res) => {
 
   // Récupérer toutes les tâches
