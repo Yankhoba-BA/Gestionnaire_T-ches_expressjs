@@ -181,7 +181,7 @@ router.post('/taches/:id/modifier', (req, res) => {
 
 router.post('/taches/:id/supprimer', (req, res) => {
 
-  const id = req.params.id;
+  const id_s = req.params.id;
 
   db.query('DELETE FROM tache WHERE id = ?', [id], (err) => {
     if (err) {
